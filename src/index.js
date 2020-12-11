@@ -54,35 +54,42 @@ const parts = [
 const App = () => {
   const [left, setLeft] = useState(0)
   const [right, setRight] = useState(0)
-  const [clicks, setClicks] = useState({ left: 0, right: 0 })
+  const [allClicks, setAll] = useState([])
   const handlerLeftClick = () => {
-    const newClicks = {
-      ...clicks,
-      left: clicks.left + 1,
-      //right: clicks.right
-
-    }
-    setClicks(newClicks)
+    setAll(allClicks.concat('L'))
+    setLeft(left + 1)
   }
   const handlerRightClick = () => {
-    const newClicks = {
-      //left: clicks.left,
-      ...clicks,
-      right: clicks.right + 1
-    }
-    setClicks(newClicks)
+    setAll(allClicks.concat('R'))
+    setRight(right + 1)
+  } 
+  const setToValue = (num) => () => {
+    setLeft(num)
   }
-
+ 
   return (
     <div>
-      {clicks.left}
-      <button onClick={handlerLeftClick}>
-        left
-    </button>
-      <button onClick={handlerRightClick}>
-        right
-    </button>
-      {clicks.right}
+      {left}
+      <Button onClick={handlerLeftClick} text='left'></Button>
+      <Button onClick={handlerRightClick} text='right'></Button>
+      {right}
+      <History allClicks={allClicks}></History>
+       <button onClick={setToValue(10)}>add</button>
+    </div>
+  )
+}
+
+const History = (props) => {
+  if (props.allClicks.length === 0) {
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
+  }
+  return (
+    <div>
+      button press history :{props.allClicks.join(' ')}
     </div>
   )
 }
@@ -95,10 +102,10 @@ const Display = (props) => {
   )
 }
 
-const Button = (props) => {
+const Button = ({ onClick, text }) => {
   return (
-    <button onClick={props.handClick}>
-      {props.text}
+    <button onClick={onClick}>
+      {text}
     </button>
   )
 }
