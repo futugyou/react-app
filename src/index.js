@@ -52,35 +52,37 @@ const parts = [
 ]
 
 const App = () => {
-  const now = new Date()
-  const a = 10
-  const b = 20
-  const [couter, setCouter] = useState(0)
-  const handClick = () => {
-    console.log('clicked')
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+  const [clicks, setClicks] = useState({ left: 0, right: 0 })
+  const handlerLeftClick = () => {
+    const newClicks = {
+      ...clicks,
+      left: clicks.left + 1,
+      //right: clicks.right
+
+    }
+    setClicks(newClicks)
+  }
+  const handlerRightClick = () => {
+    const newClicks = {
+      //left: clicks.left,
+      ...clicks,
+      right: clicks.right + 1
+    }
+    setClicks(newClicks)
   }
 
-  // setTimeout(() => {
-  //   setCouter(couter + 1)
-  // }, 1000);
-  // return (
-  //   <div>
-  //     <p>Hello world, it si {now.toString()}</p>
-  //     <p>
-  //       {a} plus {b} is {a + b}
-  //     </p>
-  //   </div>
-  // )
-  const increase = () => setCouter(couter + 1)
-  const decrease = () => setCouter(couter - 1)
-  const setZero = () => setCouter(0)
   return (
     <div>
-      {/* <div>{couter}</div> */}
-      <Display couter={couter} />
-      <Button handClick={increase} text="plus"></Button>
-      <Button handClick={decrease} text="de"></Button>
-      <Button handClick={setZero} text="zero"></Button>
+      {clicks.left}
+      <button onClick={handlerLeftClick}>
+        left
+    </button>
+      <button onClick={handlerRightClick}>
+        right
+    </button>
+      {clicks.right}
     </div>
   )
 }
