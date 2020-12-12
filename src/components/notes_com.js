@@ -1,5 +1,5 @@
 import React from 'react'
-import Node from './node'
+import Note from './note'
 
 const NotesCom = (props) => {
     const { notes } = props
@@ -8,8 +8,8 @@ const NotesCom = (props) => {
             <h1>notes</h1>
             <ul>
                 {
-                    notes.map(node =>
-                        <Node key={node.id} node={node} />
+                    notes.map(note =>
+                        <Note key={note.id} note={note} />
                     )
                 }
             </ul>
