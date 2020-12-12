@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Note from './note'
+import Notification from './notification'
+import Footer from './footer'
 import noteService from "../services/notes";
 
 const FormComp = () => {
     const [notes, setNotes] = useState([])
     const [newNote, setNote] = useState('a new note')
     const [showAll, setShowAll] = useState(true)
+    const [errorMessage, setErrorMessage] = useState('error')
+    useEffect(() => setErrorMessage(null), [])
     const url = 'http://localhost:3001/notes'
 
     const hook = () => {
@@ -53,15 +57,17 @@ const FormComp = () => {
                 setNotes(notes.map(note => note.id !== id ? note : response))
             })
             .catch(error => {
-                alert(
-                    `the note '${note.content}' was already deleted`
-                )
+                setErrorMessage(`note ${note.content} was already delete`)
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000);
                 setNotes(notes.filter(n => n.id !== id))
             })
     }
     return (
         <div>
             <h1>Notes</h1>
+            <Notification message={errorMessage}></Notification>
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
                     show {showAll ? 'importtant' : 'all'}
@@ -79,6 +85,7 @@ const FormComp = () => {
                 <input value={newNote} onChange={handlerNoteChange}></input>
                 <button type='submit'>save</button>
             </form>
+            <Footer></Footer>
         </div>
     )
 }
