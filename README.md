@@ -68,3 +68,16 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### use json server
+```
+npm install -g json-server
+npm install json-server --save-dev  //dev only
+npx json-server --port 3001 --watch db.json
+```
+
+### add axios
+```
+npm install axios
+```
