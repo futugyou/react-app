@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import Note from './note'
-import axios from "axios";
+import noteService from "../services/notes";
 
 const FormComp = () => {
     const [notes, setNotes] = useState([])
     const [newNote, setNote] = useState('a new note')
     const [showAll, setShowAll] = useState(true)
+    const url = 'http://localhost:3001/notes'
 
     const hook = () => {
         console.log('effect')
-        axios
-            .get('http://localhost:3001/notes')
+        noteService
+            .getAll()
             .then(response => {
-                const notes = response.data
                 console.log('promise fulfilled')
                 //通常，对状态更新函数的调用会触发组件的重新渲染。
-                setNotes(notes)
+                setNotes(response)
             })
     }
     //默认情况下，effects 在每次渲染完成后运行，但是你可以选择只在某些值发生变化时才调用。
@@ -35,15 +35,30 @@ const FormComp = () => {
             date: new Date().toDateString(),
             important: newNote.length > 5
         }
-        setNotes(notes.concat(newobj))
-        console.log('button clicked', event.target)
-        setNote('')
+        noteService.create(newobj).then(response => {
+            setNotes(notes.concat(response))
+            setNote('')
+        })
     }
     const handlerNoteChange = (event) => {
         console.log(event.target.value)
         setNote(event.target.value)
     }
-
+    const toggleImportanceOf = (id) => {
+        const note = notes.find(n => n.id === id)
+        const changeNote = { ...note, important: !note.important }
+        noteService
+            .update(id, changeNote)
+            .then(response => {
+                setNotes(notes.map(note => note.id !== id ? note : response))
+            })
+            .catch(error => {
+                alert(
+                    `the note '${note.content}' was already deleted`
+                )
+                setNotes(notes.filter(n => n.id !== id))
+            })
+    }
     return (
         <div>
             <h1>Notes</h1>
@@ -54,7 +69,11 @@ const FormComp = () => {
             </div>
             <ul>
                 {showNotes.map(note =>
-                    <Note key={note.id} note={note}></Note>)}
+                    <Note
+                        key={note.id}
+                        note={note}
+                        toggleImportance={() => toggleImportanceOf(note.id)}>
+                    </Note>)}
             </ul>
             <form onSubmit={addNote}>
                 <input value={newNote} onChange={handlerNoteChange}></input>
