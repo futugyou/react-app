@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 //状态以及所有相关的函数都在组件外进行定义，并作为属性传递给组件
 const LoginForm = ({
@@ -23,6 +24,14 @@ const LoginForm = ({
             </form>
         </div>
     )
+}
+
+LoginForm.propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    handleUsernameChange: PropTypes.func.isRequired,
+    HandlePasswordChange: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
 }
 
 export default LoginForm

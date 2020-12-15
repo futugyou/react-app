@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Note from './note'
 import Notification from './notification'
 import Footer from './footer'
@@ -10,12 +10,14 @@ import LoginForm from './login'
 
 const FormComp = () => {
     const [notes, setNotes] = useState([])
-    const [newNote, setNote] = useState('a new note')
+
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null) 
+    const [user, setUser] = useState(null)
+
+    const noteFormRef = useRef()
     const hook = () => {
         console.log('effect')
         noteService
@@ -41,25 +43,7 @@ const FormComp = () => {
         }
     }, [])
     const showNotes = showAll ? notes : notes.filter(note => note.important)
-    const addNote = (event) => {
-        //事件处理立即调用 event.preventDefault() 方法，
-        //它会阻止提交表单的默认操作。 因为默认操作会导致页面重新加载
-        event.preventDefault()
-        const newobj = {
-            id: notes.length + 1,
-            content: newNote,
-            date: new Date().toDateString(),
-            important: newNote.length > 5
-        }
-        noteService.create(newobj).then(response => {
-            setNotes(notes.concat(response))
-            setNote('')
-        })
-    }
-    const handleNoteChange = (event) => {
-        console.log(event.target.value)
-        setNote(event.target.value)
-    }
+
     const toggleImportanceOf = (id) => {
         const note = notes.find(n => n.id === id)
         const changeNote = { ...note, important: !note.important }
@@ -110,14 +94,16 @@ const FormComp = () => {
         )
     }
 
+    const addNote = async (noteObject) => {
+        noteFormRef.current.togglableVisibility()
+        const returnNote = await noteService.create(noteObject)
+        setNotes(notes.concat(returnNote))
+    }
+
     const noteForm = () => {
         return (
-            <Togglable buttonLable="new note">
-                <NoteForm
-                    onSubmit={addNote}
-                    value={newNote}
-                    handleChange={handleNoteChange}
-                />
+            <Togglable buttonLable="new note" ref={noteFormRef}>
+                <NoteForm createNote={addNote} />
             </Togglable>
         )
     }
