@@ -7,7 +7,7 @@ const Hello = (p) => {
 
     return (
         <div>
-            <p>Hello {p.name} age {p.age} like {p.like}</p>
+            <p>Hello {p.name} age {p.age} like {p.like} {name}</p>
             <p>{p.obj} sum is {p.sum}</p>
             <p>so you were probdbly born in {bornYear()}</p>
 
