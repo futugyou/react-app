@@ -3,15 +3,19 @@ import Note from './note'
 import Notification from './notification'
 import Footer from './footer'
 import noteService from "../services/notes";
+import loginService from "../services/login";
+import Togglable from './togglable'
+import NoteForm from './noteform'
+import LoginForm from './login'
 
 const FormComp = () => {
     const [notes, setNotes] = useState([])
     const [newNote, setNote] = useState('a new note')
     const [showAll, setShowAll] = useState(true)
-    const [errorMessage, setErrorMessage] = useState('error')
-    useEffect(() => setErrorMessage(null), [])
-    const url = 'http://localhost:3001/notes'
-
+    const [errorMessage, setErrorMessage] = useState(null)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [user, setUser] = useState(null) 
     const hook = () => {
         console.log('effect')
         noteService
@@ -28,6 +32,14 @@ const FormComp = () => {
     useEffect(hook, [])
     console.log('count', notes.length, 'notes')
 
+    useEffect(() => {
+        const loggedUserJson = window.localStorage.getItem('loggedNoteappUser')
+        if (loggedUserJson) {
+            const user = JSON.parse(loggedUserJson)
+            setUser(user)
+            noteService.setToken(user.token)
+        }
+    }, [])
     const showNotes = showAll ? notes : notes.filter(note => note.important)
     const addNote = (event) => {
         //事件处理立即调用 event.preventDefault() 方法，
@@ -44,7 +56,7 @@ const FormComp = () => {
             setNote('')
         })
     }
-    const handlerNoteChange = (event) => {
+    const handleNoteChange = (event) => {
         console.log(event.target.value)
         setNote(event.target.value)
     }
@@ -64,10 +76,64 @@ const FormComp = () => {
                 setNotes(notes.filter(n => n.id !== id))
             })
     }
+
+    const handleLogin = async (event) => {
+        event.preventDefault()
+        try {
+            const user = await loginService.login({
+                username, password
+            })
+            window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+            noteService.setToken(user.token)
+            setUser(user)
+            setUsername('')
+            setPassword('')
+        } catch (error) {
+            setErrorMessage('wrong credentials')
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000);
+        }
+    }
+
+    const loginForm = () => {
+        return (
+            <Togglable buttonLable='login'>
+                <LoginForm
+                    username={username}
+                    password={password}
+                    handleUsernameChange={({ target }) => setUsername(target.value)}
+                    handlePasswordChange={({ target }) => setPassword(target.value)}
+                    handleSubmit={handleLogin}
+                />
+            </Togglable>
+        )
+    }
+
+    const noteForm = () => {
+        return (
+            <Togglable buttonLable="new note">
+                <NoteForm
+                    onSubmit={addNote}
+                    value={newNote}
+                    handleChange={handleNoteChange}
+                />
+            </Togglable>
+        )
+    }
+
     return (
         <div>
             <h1>Notes</h1>
             <Notification message={errorMessage}></Notification>
+            {user === null ?
+                loginForm() :
+                <div>
+                    <p>{user.name} logged-in</p>
+                    {noteForm()}
+                </div>
+            }
+
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
                     show {showAll ? 'importtant' : 'all'}
@@ -81,10 +147,7 @@ const FormComp = () => {
                         toggleImportance={() => toggleImportanceOf(note.id)}>
                     </Note>)}
             </ul>
-            <form onSubmit={addNote}>
-                <input value={newNote} onChange={handlerNoteChange}></input>
-                <button type='submit'>save</button>
-            </form>
+
             <Footer></Footer>
         </div>
     )
