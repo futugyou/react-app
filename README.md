@@ -81,3 +81,10 @@ npx json-server --port 3001 --watch db.json
 ```
 npm install axios
 ```
+
+
+### test
+```
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+npm install --save-dev cypress
+```

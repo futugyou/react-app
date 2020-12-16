@@ -76,6 +76,7 @@ const App = () => {
     }
 
     const addNote = async (noteObject) => {
+        console.log(noteFormRef.curren)
         noteFormRef.current.togglableVisibility()
         const returnNote = await noteService.create(noteObject)
         setNotes(notes.concat(returnNote))
@@ -83,7 +84,7 @@ const App = () => {
 
     const noteForm = () => {
         return (
-            <Togglable buttonLable='new note' ref={noteFormRef}>
+            <Togglable buttonLable='new_note' ref={noteFormRef}>
                 <NoteForm createNote={addNote} />
             </Togglable>
         )
