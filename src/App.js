@@ -10,23 +10,17 @@ import LoginForm from './components/login'
 
 const App = () => {
     const [notes, setNotes] = useState([])
-
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
     const noteFormRef = useRef()
-    const hook = () => {
+    const hook = async () => {
         console.log('effect')
-        noteService
-            .getAll()
-            .then(response => {
-                console.log('promise fulfilled')
-                //通常，对状态更新函数的调用会触发组件的重新渲染。
-                setNotes(response)
-            })
+        var notes = await noteService.getAll()
+        console.log('promise fulfilled')
+        //通常，对状态更新函数的调用会触发组件的重新渲染。
+        setNotes(notes)
     }
     //默认情况下，effects 在每次渲染完成后运行，但是你可以选择只在某些值发生变化时才调用。
     //useEffect的第二个参数用于指定effect运行的频率。
@@ -59,17 +53,12 @@ const App = () => {
         }
     }
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
+    const userLogin = async (noteObject) => {
         try {
-            const user = await loginService.login({
-                username, password
-            })
+            const user = await loginService.login(noteObject)
             window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-            noteService.setToken(user.token)
             setUser(user)
-            setUsername('')
-            setPassword('')
+            noteService.setToken(user.token)
         } catch (error) {
             setErrorMessage('wrong credentials')
             setTimeout(() => {
@@ -81,13 +70,7 @@ const App = () => {
     const loginForm = () => {
         return (
             <Togglable buttonLable='login'>
-                <LoginForm
-                    username={username}
-                    password={password}
-                    handleUsernameChange={({ target }) => setUsername(target.value)}
-                    handlePasswordChange={({ target }) => setPassword(target.value)}
-                    handleSubmit={handleLogin}
-                />
+                <LoginForm userLogin={userLogin}/>
             </Togglable>
         )
     }
@@ -110,14 +93,14 @@ const App = () => {
         <div>
             <h1>Notes</h1>
             <Notification message={errorMessage}></Notification>
-            {user === null ?
-                loginForm() :
-                <div>
-                    <p>{user.name} logged-in</p>
-                    {noteForm()}
-                </div>
+            {
+                user === null ?
+                    loginForm() :
+                    <div>
+                        <p>{user.username} logged-in</p>
+                        {noteForm()}
+                    </div>
             }
-
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
                     show {showAll ? 'importtant' : 'all'}

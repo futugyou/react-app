@@ -1,14 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-//状态以及所有相关的函数都在组件外进行定义，并作为属性传递给组件
-const LoginForm = ({
-    handleSubmit,
-    handleUsernameChange,
-    HandlePasswordChange,
-    username,
-    password
-}) => {
+const LoginForm = ({ userLogin }) => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        const user = userLogin({
+            username, password
+        })
+        if (user) {
+            setUsername('')
+            setPassword('')
+        }
+    }
+
+    const handleUsernameChange = ({ target }) => {
+        setUsername(target.value)
+    }
+
+    const HandlePasswordChange = ({ target }) => {
+        setPassword(target.value)
+    }
+
     return (
         <div>
             <h2>Login</h2>
@@ -27,11 +41,7 @@ const LoginForm = ({
 }
 
 LoginForm.propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
-    handleUsernameChange: PropTypes.func.isRequired,
-    HandlePasswordChange: PropTypes.func.isRequired,
-    username: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
+    userLogin: PropTypes.func.isRequired,
 }
 
 export default LoginForm
