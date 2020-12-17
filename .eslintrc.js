@@ -6,7 +6,6 @@ module.exports = {
         "cypress/globals": true
     },
     "extends": [
-        "eslint:recommended",
         "plugin:react/recommended"
     ],
     "parserOptions": {
@@ -19,11 +18,7 @@ module.exports = {
     "plugins": [
         "react", "jest", "cypress"
     ],
-    "rules": {
-        "indent": [
-            "error",
-            4
-        ],
+    "rules": { 
         "linebreak-style": [
             "error",
             "windows"
