@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleImportanceOf } from '../../reducers/noteReducer'
+import { useParams } from 'react-router-dom'
 
 const Note = ({ note, handleClick }) => {
     return (
@@ -13,9 +14,12 @@ const Note = ({ note, handleClick }) => {
 
 const Notes = () => {
     const dispatch = useDispatch()
+    const id = useParams().id
+    console.log(id)
     const notes = useSelector(state => {
+        console.log(state)
         if (state.filter === 'ALL') {
-            return state.notes
+            return state.notes.filter(note => id === undefined || note.id === id)
         }
         return state.filter === 'IMPORTANT'
             ? state.notes.filter(note => note.important)
