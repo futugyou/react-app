@@ -13,33 +13,35 @@ const App = () => {
     }, [dispatch])
     const padding = { padding: 5 }
     return (
-        <Router>
-            <div>
-                <Link style={padding} to="/newnotes">home</Link>
-                <Link style={padding} to="/notes">notes</Link>
-                <Link style={padding} to="/users">users</Link>
-            </div>
-            <Switch>
-                <Route path="/newnotes">
-                    <NewNote></NewNote>
-                </Route>
-                {/* <Route path="/users">
+        <div className="container">
+            <Router >
+                <div>
+                    <Link style={padding} to="/newnotes">home</Link>
+                    <Link style={padding} to="/notes">notes</Link>
+                    <Link style={padding} to="/users">users</Link>
+                </div>
+                <Switch>
+                    <Route path="/newnotes">
+                        <NewNote></NewNote>
+                    </Route>
+                    {/* <Route path="/users">
                     <Users />
                 </Route> */}
-                <Route path="/notes/:id">
-                    <VisibleFilter></VisibleFilter>
-                    <Notes  />
-                </Route>
-                <Route path="/notes">
-                    <VisibleFilter></VisibleFilter>
-                    <Notes></Notes>
-                </Route>
-            </Switch>
+                    <Route path="/notes/:id">
+                        <VisibleFilter></VisibleFilter>
+                        <Notes />
+                    </Route>
+                    <Route path="/notes">
+                        <VisibleFilter></VisibleFilter>
+                        <Notes></Notes>
+                    </Route>
+                </Switch>
 
-            <div>
-                <i>Note app</i>
-            </div>
-        </Router>
+                <div>
+                    <i>Note app</i>
+                </div>
+            </Router>
+        </div>
     )
 
     // return (
