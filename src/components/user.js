@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { gql, useQuery, useLazyQuery } from '@apollo/client'
+import PersonForm from './usercreate'
 
 const ALL_PERSONS = gql`
 query{
@@ -24,7 +25,9 @@ query findPersonByName($nameToSearch:String!){
 }`
 
 const Users = () => {
-    const result = useQuery(ALL_PERSONS)
+    const result = useQuery(ALL_PERSONS, {
+        pollInterval: 2000
+    })
     const [getPerson, lazyresult] = useLazyQuery(FIND_PERSON)
     const [person, setPerson] = useState(null)
 
@@ -56,6 +59,7 @@ const Users = () => {
     }
     return (
         <div>
+            <PersonForm></PersonForm>
             <h2>users</h2>
             {result.data.allPersons.map(p =>
                 <div key={p.name}>
