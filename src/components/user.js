@@ -1,28 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { gql, useQuery, useLazyQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import PersonForm from './usercreate'
-
-const ALL_PERSONS = gql`
-query{
-    allPersons{
-        name
-        phone
-        id
-    }
-}`
-
-const FIND_PERSON = gql`
-query findPersonByName($nameToSearch:String!){
-    findPerson(name:$nameToSearch){
-        name
-        phone
-        id
-        address{
-            street
-            city
-        }
-    }
-}`
+import { ALL_PERSONS, FIND_PERSON } from './userqueries'
+import Notification from './notification'
 
 const Users = () => {
     const result = useQuery(ALL_PERSONS, {
@@ -30,7 +10,7 @@ const Users = () => {
     })
     const [getPerson, lazyresult] = useLazyQuery(FIND_PERSON)
     const [person, setPerson] = useState(null)
-
+    const [errorMessage, setErrorMessage] = useState(null)
     useEffect(() => {
         if (lazyresult.data) {
             setPerson(lazyresult.data.findPerson)
@@ -44,8 +24,12 @@ const Users = () => {
     const showPerson = (name) => {
         getPerson({ variables: { nameToSearch: name } })
     }
-
-
+    const notify = (message) => {
+        setErrorMessage(message)
+        setTimeout(() => {
+            setErrorMessage(null)
+        }, 10000)
+    }
 
     if (person) {
         return (
@@ -59,7 +43,8 @@ const Users = () => {
     }
     return (
         <div>
-            <PersonForm></PersonForm>
+            <Notification message={errorMessage}></Notification>
+            <PersonForm setError={notify}></PersonForm>
             <h2>users</h2>
             {result.data.allPersons.map(p =>
                 <div key={p.name}>
