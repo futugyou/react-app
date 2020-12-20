@@ -3,6 +3,7 @@ import { useQuery, useLazyQuery } from '@apollo/client'
 import PersonForm from './usercreate'
 import { ALL_PERSONS, FIND_PERSON } from './userqueries'
 import Notification from './notification'
+import PhoneFrom from './userphoneedit'
 
 const Users = () => {
     const result = useQuery(ALL_PERSONS, {
@@ -51,6 +52,7 @@ const Users = () => {
                     {p.name} {p.phone}
                     <button onClick={() => showPerson(p.name)}>show address</button>
                 </div>)}
+            <PhoneFrom setError={notify}></PhoneFrom>
         </div>
     )
 }
