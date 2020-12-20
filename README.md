@@ -70,6 +70,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 
+### https://fullstackopen.com/zh/
+
 ### use json server
 ```
 npm install -g json-server
@@ -87,4 +89,9 @@ npm install axios
 ```
 npm install --save-dev @testing-library/react @testing-library/jest-dom
 npm install --save-dev cypress
+```
+
+### apollo client
+```
+npm install @apollo/client graphql
 ```
