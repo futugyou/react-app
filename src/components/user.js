@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useQuery, useLazyQuery, useApolloClient } from '@apollo/client'
 import PersonForm from './usercreate'
 import { ALL_PERSONS, FIND_PERSON } from './userqueries'
 import Notification from './notification'
@@ -14,6 +14,7 @@ const Users = () => {
     const [getPerson, lazyresult] = useLazyQuery(FIND_PERSON)
     const [person, setPerson] = useState(null)
     const [errorMessage, setErrorMessage] = useState(null)
+    const client = useApolloClient()
     useEffect(() => {
         if (lazyresult.data) {
             setPerson(lazyresult.data.findPerson)
@@ -33,6 +34,11 @@ const Users = () => {
             setErrorMessage(null)
         }, 10000)
     }
+    const logout = () => {
+        setToken(null)
+        localStorage.clear()
+        client.resetStore()
+    }
     if (!token) {
         return (
             <div>
@@ -42,7 +48,6 @@ const Users = () => {
             </div>
         )
     }
-
     if (person) {
         return (
             <div>
@@ -55,6 +60,7 @@ const Users = () => {
     }
     return (
         <div>
+            {token ? <button onClick={() => logout()}>logout</button> : <div></div>}
             <Notification message={errorMessage}></Notification>
             <PersonForm setError={notify}></PersonForm>
             <h2>users</h2>
