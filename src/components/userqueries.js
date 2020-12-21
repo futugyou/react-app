@@ -11,13 +11,24 @@ fragment PersonDetails on Person {
     }
 }`
 
+export const PERSON_ADDED = gql`
+  subscription {
+    personAdded {
+      ...PersonDetails
+    }
+  }
+  
+${PERSON_DETAILS}
+`
+
 export const ALL_PERSONS = gql`
 query{
     allPersons{
         ...PersonDetails
     }
-    ${PERSON_DETAILS}
-}`
+}
+${PERSON_DETAILS}
+`
 
 export const FIND_PERSON = gql`
 query findPersonByName($nameToSearch:String!){

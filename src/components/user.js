@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery, useLazyQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useLazyQuery, useApolloClient, useSubscription } from '@apollo/client'
 import PersonForm from './usercreate'
-import { ALL_PERSONS, FIND_PERSON } from './userqueries'
+import { ALL_PERSONS, FIND_PERSON, PERSON_ADDED } from './userqueries'
 import Notification from './notification'
 import PhoneFrom from './userphoneedit'
 import LoginForm from './userlogin'
 
 const Users = () => {
+    const updateCacheWith = (addedPerson) => {
+        const includedIn = (set, object) => set.map(p => p.id).includes(object.id)
+        const dataInstore = client.readQuery({ query: ALL_PERSONS })
+        if (!includedIn(dataInstore.allPersons, addedPerson)) {
+            client.writeQuery({
+                query: ALL_PERSONS,
+                data: { allPersons: dataInstore.allPersons.concat(addedPerson) }
+            })
+        }
+    }
+
+    useSubscription(PERSON_ADDED, {
+        onSubscriptionData: ({ subscriptionData }) => {
+            const addedPerson = subscriptionData.data.personAdded
+            notify(`${addedPerson.name} added`)
+            updateCacheWith(addedPerson)
+        }
+    })
     const [token, setToken] = useState(null)
     const result = useQuery(ALL_PERSONS, {
         pollInterval: 2000
@@ -39,6 +57,8 @@ const Users = () => {
         localStorage.clear()
         client.resetStore()
     }
+
+
     if (!token) {
         return (
             <div>
@@ -62,7 +82,7 @@ const Users = () => {
         <div>
             {token ? <button onClick={() => logout()}>logout</button> : <div></div>}
             <Notification message={errorMessage}></Notification>
-            <PersonForm setError={notify}></PersonForm>
+            <PersonForm setError={notify} updateCacheWith={updateCacheWith}></PersonForm>
             <h2>users</h2>
             {result.data.allPersons.map(p =>
                 <div key={p.name}>

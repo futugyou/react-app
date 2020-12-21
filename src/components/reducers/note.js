@@ -15,9 +15,7 @@ const Note = ({ note, handleClick }) => {
 const Notes = () => {
     const dispatch = useDispatch()
     const id = useParams().id
-    console.log(id)
     const notes = useSelector(state => {
-        console.log(state)
         if (state.filter === 'ALL') {
             return state.notes.filter(note => id === undefined || note.id === id)
         }
