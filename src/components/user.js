@@ -4,8 +4,10 @@ import PersonForm from './usercreate'
 import { ALL_PERSONS, FIND_PERSON } from './userqueries'
 import Notification from './notification'
 import PhoneFrom from './userphoneedit'
+import LoginForm from './userlogin'
 
 const Users = () => {
+    const [token, setToken] = useState(null)
     const result = useQuery(ALL_PERSONS, {
         pollInterval: 2000
     })
@@ -30,6 +32,15 @@ const Users = () => {
         setTimeout(() => {
             setErrorMessage(null)
         }, 10000)
+    }
+    if (!token) {
+        return (
+            <div>
+                <Notification message={errorMessage}></Notification>
+                <h2>login</h2>
+                <LoginForm setToken={setToken} setError={notify}></LoginForm>
+            </div>
+        )
     }
 
     if (person) {
