@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.6",
     "@testing-library/user-event": "^12.1.10",
+    "apollo-link-context": "^1.0.20",
     "axios": "^0.21.0",
     "graphql": "^15.4.0",
     "prop-types": "^15.7.2",
