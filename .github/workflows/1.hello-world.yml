@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches: [master]
-    types: [opened, synchronize]
 
 jobs:
   hello_world_job:
@@ -39,7 +36,8 @@ jobs:
       #     start: npm run start
       #     wait-on: http://localhost:5000
       - name: Heroku
-      - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.6.8 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "futugyouzu-react-app" #Must be unique in Heroku
