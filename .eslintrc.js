@@ -18,11 +18,7 @@ module.exports = {
     "plugins": [
         "react", "jest", "cypress"
     ],
-    "rules": { 
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
+    "rules": {
         "quotes": [
             "error",
             "single"
