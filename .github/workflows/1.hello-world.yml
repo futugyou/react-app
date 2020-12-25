@@ -35,7 +35,6 @@ jobs:
       #     command: npm run cypress:open
       #     start: npm run start
       #     wait-on: http://localhost:5000
-      - name: Heroku
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.6.8 # This is the action
         with:
