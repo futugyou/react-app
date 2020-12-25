@@ -2,3 +2,4 @@ node_modules
 build
 cypress
 .eslintrc.js
+*.js text eol=lf
