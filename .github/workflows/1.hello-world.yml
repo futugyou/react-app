@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
 
 jobs:
   hello_world_job:
@@ -26,8 +29,10 @@ jobs:
         with:
           node-version: "12.x"
       - name: npm install
+        if: ${{ github.event_name == 'push' }}
         run: npm install
       - name: lint
+        if: ${{ github.event_name == 'push' }}
         run: npm run eslint
       # - name: e2e tests
       #   uses: cypress-io/github-action@v2
@@ -36,6 +41,7 @@ jobs:
       #     start: npm run start
       #     wait-on: http://localhost:5000
       - name: Deploying to Heroku
+        if: ${{ github.event_name == 'pull_request' }}
         uses: akhileshns/heroku-deploy@v3.6.8 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
