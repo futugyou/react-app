@@ -28,11 +28,15 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.33.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: npm install
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pull_request' }}
         run: npm install
       - name: lint
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pull_request' }}
         run: npm run eslint
       # - name: e2e tests
       #   uses: cypress-io/github-action@v2
@@ -41,7 +45,7 @@ jobs:
       #     start: npm run start
       #     wait-on: http://localhost:5000
       - name: Deploying to Heroku
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull' }}
         uses: akhileshns/heroku-deploy@v3.6.8 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
