@@ -26,8 +26,8 @@ const App = () => {
                         <NewNote></NewNote>
                     </Route>
                     <Route path="/users">
-                    <Users />
-                </Route>
+                        <Users />
+                    </Route>
                     <Route path="/notes/:id">
                         <VisibleFilter></VisibleFilter>
                         <Notes />

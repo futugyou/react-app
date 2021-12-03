@@ -1,0 +1,22 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: reactapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: reactapp
+  template:
+    metadata:
+      labels:
+        app: reactapp
+    spec:
+      containers:
+      - name: reactapp
+        image: futugyousuzu/reactapp:latest
+        imagePullPolicy: Always
+        ports:
+            - containerPort: 3000
+              protocol: TCP
+      restartPolicy: Always
