@@ -19,7 +19,7 @@ const Users = () => {
     }
 
     useSubscription(PERSON_ADDED, {
-        onSubscriptionData: ({ subscriptionData }) => {
+        onData: ({ subscriptionData }) => {
             const addedPerson = subscriptionData.data.personAdded
             notify(`${addedPerson.name} added`)
             updateCacheWith(addedPerson)
@@ -65,6 +65,7 @@ const Users = () => {
                 <Notification message={errorMessage}></Notification>
                 <h2>login</h2>
                 <LoginForm setToken={setToken} setError={notify}></LoginForm>
+                <PersonForm setError={notify} updateCacheWith={updateCacheWith}></PersonForm>
             </div>
         )
     }

@@ -1,14 +1,5 @@
-// import React from 'react'
-// import ReactDOM from 'react-dom'
-// import App from './App'
-// import './index.css'
-
-// ReactDOM.render(
-//     <App />,
-//     document.getElementById('root')
-// )
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './AppReducer'
 import store from './store'
@@ -16,7 +7,8 @@ import store from './store'
 import { ApolloProvider, ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client'
 import { setContext } from 'apollo-link-context'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('phonenumbers-user-token')
@@ -30,13 +22,9 @@ const authLink = setContext((_, { headers }) => {
 
 const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
 
-const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:4000/graphql',
-  options: {
-    reconnect: true
-  }
-})
-
+const wsLink = new GraphQLWsLink(createClient({
+  url: 'ws://localhost:4000/graphql',
+}));
 const splitLink = split(({ query }) => {
   const definition = getMainDefinition(query)
   return (
@@ -52,7 +40,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: splitLink
 })
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <div>
     <ApolloProvider client={client}>
       <Provider store={store}>
@@ -60,6 +48,4 @@ ReactDOM.render(
       </Provider>
     </ApolloProvider>
   </div>
-  ,
-  document.getElementById('root')
 )

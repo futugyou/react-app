@@ -5,7 +5,7 @@ import Users from './components/user'
 import VisibleFilter from './components/reducers/filter'
 import { initializeNotes } from './reducers/noteReducer'
 import { useDispatch } from 'react-redux'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -21,23 +21,17 @@ const App = () => {
                     <Link style={padding} to="/notes">notes</Link>
                     <Link style={padding} to="/users">users</Link>
                 </div>
-                <Switch>
-                    <Route path="/newnotes">
-                        <NewNote></NewNote>
+                <Routes>
+                    <Route path="/newnotes" element={<NewNote />} >
                     </Route>
-                    <Route path="/users">
-                        <Users />
+                    <Route path="/users" element={<Users />} >
                     </Route>
-                    <Route path="/notes/:id">
-                        <VisibleFilter></VisibleFilter>
-                        <Notes />
+                    <Route path="/notes/:id" element={<><VisibleFilter /> <Notes /></>} >
                     </Route>
-                    <Route path="/notes">
-                        <VisibleFilter></VisibleFilter>
-                        <Notes></Notes>
-                    </Route>
-                </Switch>
+                    <Route path="/notes" element={<><VisibleFilter /> <Notes /></>} >
 
+                    </Route>
+                </Routes>
                 <div>
                     <i>Note app</i>
                 </div>

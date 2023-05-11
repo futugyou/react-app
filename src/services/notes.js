@@ -22,7 +22,7 @@ const update = async (id, newObject) => {
     const response = await axios.put(`${baseurl}/${id}`, newObject)
     return response.data
 }
-
+// eslint-disable-next-line
 export default {
     getAll: getAll,
     create: create,

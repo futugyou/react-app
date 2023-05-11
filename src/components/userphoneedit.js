@@ -12,7 +12,7 @@ const PhoneFrom = ({ setError }) => {
         if (result.data && !result.data.editNumer) {
             setError('person not found')
         }
-    }, [result.data])
+    }, [result.data, setError])
 
     const submit = (event) => {
         event.preventDefault()
